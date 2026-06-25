@@ -1,0 +1,15 @@
+# Use a lightweight JDK runtime as the base image
+FROM eclipse-temurin:21-jre-alpine-3.21
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the packaged JAR file from your local machine into the container
+# Note: Adjust 'target/*.jar' to 'build/libs/*.jar' if you are using Gradle
+COPY target/*.jar app.jar
+
+# Expose the port your Spring Boot app runs on (default is 8080)
+EXPOSE 8080
+
+# Command to execute the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
