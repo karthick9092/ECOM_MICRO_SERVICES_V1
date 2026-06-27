@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController @Validated
 @RequestMapping("api/users")
-@EnableJpaAuditing(auditorAwareRef = "auditorAwareImpl")
+    @EnableJpaAuditing(auditorAwareRef = "auditorAwareImpl")
 @Tag(name = "User Management API", description = "CRUD operations for user management")
 public class UserController {
 
@@ -32,8 +32,8 @@ public class UserController {
 
     AppConfig appConfig;
 
-    @Value("${app-info.description}")
-    private String appInfo;
+//    @Value("${app-info.description}")
+//    private String appInfo;
 
     @Autowired
     Environment environment;
@@ -66,8 +66,8 @@ public class UserController {
     @GetMapping("/get/{id}")
     public ResponseDto<UserDto> getUser(@PathVariable
                                         @Pattern(regexp = "^[0-9]+$", message = "Id must be a number")
-                                            Integer id) {
-        UserDto userDto = userService.getUser(id);
+                                            String id) {
+        UserDto userDto = userService.getUser(Integer.valueOf(id));
         ResponseDto<UserDto> responseDto = ResponseDto.<UserDto>builder().status("success").msg("User fetched successfully").
                                                 data(userDto).build();
         return responseDto;
