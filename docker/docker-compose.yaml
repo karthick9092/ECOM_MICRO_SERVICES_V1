@@ -10,7 +10,29 @@ x-healthcheck: &spring-healthcheck
   retries: 3
   start_period: 90s
 
+x-mysql-env: &mysql-env
+  SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ECOMDB
+  SPRING_DATASOURCE_USERNAME: root
+  SPRING_DATASOURCE_PASSWORD: root
+
 services:
+
+  mysql-ms:
+    image: mysql:8.4
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ECOMDB
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost -uroot -proot || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - ecommerce-network
 
   rabbitmq-ms:
     image: rabbitmq:4-management
@@ -27,6 +49,7 @@ services:
 
   config-server-ms:
     image: logeswaranu/configserver:v1
+    container_name: config-server-ms
     ports:
       - "8888:8888"
     environment:
@@ -44,10 +67,11 @@ services:
 
   user-service-ms:
     image: logeswaranu/user:v1
+    container_name: user-service-ms
     ports:
       - "8080:8080"
     environment:
-      <<: *rabbitmq-env
+      <<: [*rabbitmq-env, *mysql-env]
       SPRING_PROFILES_ACTIVE: prod
       SPRING_APPLICATION_NAME: user
       SPRING_CONFIG_IMPORT: configserver:http://config-server-ms:8888
@@ -66,10 +90,11 @@ services:
 
   product-service-ms:
     image: logeswaranu/product:v1
+    container_name: product-service-ms
     ports:
       - "8081:8081"
     environment:
-      <<: *rabbitmq-env
+      <<: [*rabbitmq-env, *mysql-env]
       SPRING_PROFILES_ACTIVE: prod
       SPRING_APPLICATION_NAME: product
       SPRING_CONFIG_IMPORT: configserver:http://config-server-ms:8888
@@ -88,10 +113,11 @@ services:
 
   order-service-ms:
     image: logeswaranu/order:v1
+    container_name: order-service-ms
     ports:
       - "8082:8082"
     environment:
-      <<: *rabbitmq-env
+      <<: [*rabbitmq-env, *mysql-env]
       SPRING_PROFILES_ACTIVE: prod
       SPRING_APPLICATION_NAME: order
       SPRING_CONFIG_IMPORT: configserver:http://config-server-ms:8888

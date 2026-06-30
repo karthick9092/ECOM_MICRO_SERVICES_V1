@@ -38,8 +38,8 @@ spring:
       mode: always
     hibernate:
 
-  config:
-    import: configserver:http://localhost:8888
+#  config:
+#    import: configserver:http://localhost:8888
 
 server:
   port: 8082
