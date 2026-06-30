@@ -38,7 +38,6 @@ class OrderServiceImplTest {
                 .quantity(5)
                 .unitPrice(new BigDecimal("19.99"))
                 .totalPrice(new BigDecimal("99.95"))
-                .createdBy("tester")
                 .build();
 
         when(repo.existsByOrderNumber("ORD-2026-001")).thenReturn(false);
@@ -71,7 +70,6 @@ class OrderServiceImplTest {
                 .quantity(5)
                 .unitPrice(new BigDecimal("19.99"))
                 .totalPrice(new BigDecimal("99.95"))
-                .createdBy("tester")
                 .build();
 
         when(repo.existsByOrderNumber("ORD-2026-001")).thenReturn(true);
@@ -174,14 +172,12 @@ class OrderServiceImplTest {
         OrderDto update = OrderDto.builder()
                 .quantity(5)
                 .status("SHIPPED")
-                .updatedBy("editor")
                 .build();
 
         OrderDto result = service.update(3L, update);
 
         assertEquals(5, result.getQuantity());
         assertEquals("SHIPPED", result.getStatus());
-        assertEquals("editor", result.getUpdatedBy());
     }
 
     @Test

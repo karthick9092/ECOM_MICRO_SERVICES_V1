@@ -11,6 +11,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
@@ -25,15 +28,12 @@ import java.net.URI;
 @RestController
 @RequestMapping("/api/orders")
 @Tag(name = "Orders", description = "Order management APIs")
+@RequiredArgsConstructor
 public class OrderController {
 
-    private final OrderService service;
+    final OrderService service;
 
-    AppConfig appConfig;
-
-    public OrderController(OrderService service) {
-        this.service = service;
-    }
+    final AppConfig appConfig;
 
     @Operation(summary = "Create a new order")
     @ApiResponses({

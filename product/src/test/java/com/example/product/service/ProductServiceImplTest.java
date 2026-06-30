@@ -36,7 +36,6 @@ class ProductServiceImplTest {
                 .productName("Name")
                 .price(new BigDecimal("9.99"))
                 .quantity(10)
-                .createdBy("tester")
                 .build();
 
         when(repo.existsByProductCode("SKU-1")).thenReturn(false);
@@ -59,7 +58,7 @@ class ProductServiceImplTest {
 
     @Test
     void create_duplicateCode_throws() {
-        ProductDto dto = ProductDto.builder().productCode("SKU-1").productName("N").price(new BigDecimal("1.00")).quantity(1).createdBy("t").build();
+        ProductDto dto = ProductDto.builder().productCode("SKU-1").productName("N").price(new BigDecimal("1.00")).quantity(1).build();
         when(repo.existsByProductCode("SKU-1")).thenReturn(true);
         assertThrows(IllegalArgumentException.class, () -> service.create(dto));
         verify(repo, never()).save(any());
@@ -89,11 +88,10 @@ class ProductServiceImplTest {
         when(repo.findById(3L)).thenReturn(Optional.of(existing));
         when(repo.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        ProductDto update = ProductDto.builder().productName("New").price(new BigDecimal("6.00")).updatedBy("editor").build();
+        ProductDto update = ProductDto.builder().productName("New").price(new BigDecimal("6.00")).build();
         ProductDto result = service.update(3L, update);
         assertEquals("New", result.getProductName());
         assertEquals(new BigDecimal("6.00"), result.getPrice());
-        assertEquals("editor", result.getUpdatedBy());
     }
 
     @Test

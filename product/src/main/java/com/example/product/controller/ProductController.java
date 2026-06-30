@@ -11,6 +11,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
@@ -25,15 +28,12 @@ import java.net.URI;
 @RestController
 @RequestMapping("/api/products")
 @Tag(name = "Products", description = "Product management APIs")
+@RequiredArgsConstructor
 public class ProductController {
 
-    private final ProductService service;
+    final ProductService service;
 
-    AppConfig appConfig;
-
-    public ProductController(ProductService service) {
-        this.service = service;
-    }
+    final AppConfig appConfig;
 
     @Operation(summary = "Create a product")
     @ApiResponses({

@@ -1,5 +1,6 @@
 package com.example.product.controller;
 
+import com.example.product.config.AppConfig;
 import com.example.product.dto.ProductDto;
 import com.example.product.service.ProductService;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,8 @@ class ProductControllerTest {
     @Test
     void getById_returnsProduct() {
         ProductService service = Mockito.mock(ProductService.class);
-        ProductController controller = new ProductController(service);
+        AppConfig appConfig = Mockito.mock(AppConfig.class);
+        ProductController controller = new ProductController(service, appConfig);
 
         ProductDto product = ProductDto.builder()
                 .id(5L)
@@ -30,7 +32,6 @@ class ProductControllerTest {
                 .productName("Another Product")
                 .price(new BigDecimal("49.99"))
                 .quantity(20)
-                .createdBy("admin")
                 .build();
 
         when(service.getById(5L)).thenReturn(Optional.of(product));
@@ -45,7 +46,8 @@ class ProductControllerTest {
     @Test
     void getById_returnsNotFoundWhenNotExists() {
         ProductService service = Mockito.mock(ProductService.class);
-        ProductController controller = new ProductController(service);
+        AppConfig appConfig = Mockito.mock(AppConfig.class);
+        ProductController controller = new ProductController(service, appConfig);
 
         when(service.getById(99L)).thenReturn(Optional.empty());
 

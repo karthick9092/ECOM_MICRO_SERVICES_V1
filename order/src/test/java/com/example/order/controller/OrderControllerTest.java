@@ -1,5 +1,6 @@
 package com.example.order.controller;
 
+import com.example.order.config.AppConfig;
 import com.example.order.dto.OrderDto;
 import com.example.order.service.OrderService;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,9 @@ class OrderControllerTest {
     @Test
     void getById_returnsOrder() {
         OrderService service = Mockito.mock(OrderService.class);
-        OrderController controller = new OrderController(service);
+        AppConfig appConfig = Mockito.mock(AppConfig.class);
+
+        OrderController controller = new OrderController(service, appConfig);
 
         OrderDto order = OrderDto.builder()
                 .id(5L)
@@ -30,7 +33,6 @@ class OrderControllerTest {
                 .quantity(2)
                 .unitPrice(new BigDecimal("49.99"))
                 .totalPrice(new BigDecimal("99.98"))
-                .createdBy("admin")
                 .build();
 
         when(service.getById(5L)).thenReturn(Optional.of(order));
@@ -46,7 +48,9 @@ class OrderControllerTest {
     @Test
     void getById_returnsNotFoundWhenNotExists() {
         OrderService service = Mockito.mock(OrderService.class);
-        OrderController controller = new OrderController(service);
+        AppConfig appConfig = Mockito.mock(AppConfig.class);
+
+        OrderController controller = new OrderController(service, appConfig);
 
         when(service.getById(99L)).thenReturn(Optional.empty());
 
@@ -59,7 +63,9 @@ class OrderControllerTest {
     @Test
     void getByOrderNumber_found() {
         OrderService service = Mockito.mock(OrderService.class);
-        OrderController controller = new OrderController(service);
+        AppConfig appConfig = Mockito.mock(AppConfig.class);
+
+        OrderController controller = new OrderController(service, appConfig);
 
         OrderDto order = OrderDto.builder()
                 .id(3L)
@@ -69,7 +75,6 @@ class OrderControllerTest {
                 .quantity(2)
                 .unitPrice(new BigDecimal("29.99"))
                 .totalPrice(new BigDecimal("59.98"))
-                .createdBy("tester")
                 .build();
 
         when(service.getByOrderNumber("ORD-2026-003")).thenReturn(Optional.of(order));
