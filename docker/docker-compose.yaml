@@ -1,0 +1,113 @@
+x-rabbitmq-env: &rabbitmq-env
+  SPRING_RABBITMQ_HOST: rabbitmq-ms
+  SPRING_RABBITMQ_PORT: 5672
+  SPRING_RABBITMQ_USERNAME: guest
+  SPRING_RABBITMQ_PASSWORD: guest
+
+x-healthcheck: &spring-healthcheck
+  interval: 30s
+  timeout: 10s
+  retries: 3
+  start_period: 90s
+
+services:
+
+  rabbitmq-ms:
+    image: rabbitmq:4-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_running"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - ecommerce-network
+
+  config-server-ms:
+    image: logeswaranu/configserver:v1
+    ports:
+      - "8888:8888"
+    environment:
+      <<: *rabbitmq-env
+    healthcheck:
+      <<: *spring-healthcheck
+      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+    depends_on:
+      rabbitmq-ms:
+        condition: service_started
+    cpus: "0.5"
+    mem_limit: 512M
+    networks:
+      - ecommerce-network
+
+  user-service-ms:
+    image: logeswaranu/user:v1
+    ports:
+      - "8080:8080"
+    environment:
+      <<: *rabbitmq-env
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_APPLICATION_NAME: user
+      SPRING_CONFIG_IMPORT: configserver:http://config-server-ms:8888
+    healthcheck:
+      <<: *spring-healthcheck
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+    depends_on:
+      rabbitmq-ms:
+        condition: service_healthy
+      config-server-ms:
+        condition: service_healthy
+    cpus: "0.5"
+    mem_limit: 512M
+    networks:
+      - ecommerce-network
+
+  product-service-ms:
+    image: logeswaranu/product:v1
+    ports:
+      - "8081:8081"
+    environment:
+      <<: *rabbitmq-env
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_APPLICATION_NAME: product
+      SPRING_CONFIG_IMPORT: configserver:http://config-server-ms:8888
+    healthcheck:
+      <<: *spring-healthcheck
+      test: [ "CMD", "curl", "-f", "http://localhost:8081/actuator/health" ]
+    depends_on:
+      rabbitmq-ms:
+        condition: service_healthy
+      config-server-ms:
+        condition: service_healthy
+    cpus: "0.5"
+    mem_limit: 512M
+    networks:
+      - ecommerce-network
+
+  order-service-ms:
+    image: logeswaranu/order:v1
+    ports:
+      - "8082:8082"
+    environment:
+      <<: *rabbitmq-env
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_APPLICATION_NAME: order
+      SPRING_CONFIG_IMPORT: configserver:http://config-server-ms:8888
+    healthcheck:
+      <<: *spring-healthcheck
+      test: [ "CMD", "curl", "-f", "http://localhost:8082/actuator/health" ]
+    depends_on:
+      rabbitmq-ms:
+        condition: service_healthy
+      config-server-ms:
+        condition: service_healthy
+    cpus: "0.5"
+    mem_limit: 512M
+    networks:
+      - ecommerce-network
+
+networks:
+  ecommerce-network:
+    driver: bridge

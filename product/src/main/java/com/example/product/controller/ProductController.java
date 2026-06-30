@@ -1,6 +1,8 @@
 package com.example.product.controller;
 
+import com.example.product.config.AppConfig;
 import com.example.product.dto.ProductDto;
+import com.example.product.dto.ResponseDto;
 import com.example.product.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,6 +28,8 @@ import java.net.URI;
 public class ProductController {
 
     private final ProductService service;
+
+    AppConfig appConfig;
 
     public ProductController(ProductService service) {
         this.service = service;
@@ -104,6 +108,12 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/get/appinfo")
+    public ResponseDto<AppConfig> getAppInfo() {
+        ResponseDto<AppConfig> responseDto = ResponseDto.<AppConfig>builder().status("success").msg("App info fetched successfully").
+                data(appConfig).build();
+        return responseDto;
+    }
 }
 
 

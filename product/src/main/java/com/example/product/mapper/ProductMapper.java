@@ -20,11 +20,6 @@ public final class ProductMapper {
                 .price(p.getPrice())
                 .quantity(p.getQuantity())
                 .status(p.getStatus())
-                .createdBy(p.getCreatedBy())
-                .createdAt(p.getCreatedAt())
-                .updatedBy(p.getUpdatedBy())
-                .updatedAt(p.getUpdatedAt())
-                .version(p.getVersion())
                 .build();
     }
 
@@ -38,9 +33,6 @@ public final class ProductMapper {
                 .price(d.getPrice())
                 .quantity(d.getQuantity())
                 .status(d.getStatus() == null ? "ACTIVE" : d.getStatus())
-                .createdBy(d.getCreatedBy())
-                .updatedBy(d.getUpdatedBy())
-                .version(d.getVersion())
                 .build();
     }
 
@@ -52,7 +44,6 @@ public final class ProductMapper {
         if (d.getPrice() != null) p.setPrice(d.getPrice());
         if (d.getQuantity() != null) p.setQuantity(d.getQuantity());
         if (d.getStatus() != null) p.setStatus(d.getStatus());
-        if (d.getUpdatedBy() != null) p.setUpdatedBy(d.getUpdatedBy());
     }
 }
 

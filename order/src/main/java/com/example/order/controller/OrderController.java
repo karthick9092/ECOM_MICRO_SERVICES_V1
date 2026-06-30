@@ -1,6 +1,8 @@
 package com.example.order.controller;
 
+import com.example.order.config.AppConfig;
 import com.example.order.dto.OrderDto;
+import com.example.order.dto.ResponseDto;
 import com.example.order.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,6 +28,8 @@ import java.net.URI;
 public class OrderController {
 
     private final OrderService service;
+
+    AppConfig appConfig;
 
     public OrderController(OrderService service) {
         this.service = service;
@@ -102,6 +106,13 @@ public class OrderController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/get/appinfo")
+    public ResponseDto<AppConfig> getAppInfo() {
+        ResponseDto<AppConfig> responseDto = ResponseDto.<AppConfig>builder().status("success").msg("App info fetched successfully").
+                data(appConfig).build();
+        return responseDto;
     }
 }
 

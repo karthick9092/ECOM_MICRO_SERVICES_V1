@@ -1,4 +1,4 @@
-app-info :
+  app-info :
   name: User Management API
   description: CRUD operations for user management dev environment
   version: 1.0.0

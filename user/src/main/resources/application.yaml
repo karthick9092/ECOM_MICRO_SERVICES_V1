@@ -20,7 +20,12 @@ spring:
       ddl-auto: update
     show-sql: true
 
-  config:
+  #config:
     #import: "classpath:application_${spring.profiles.active}.yaml"
-    import: configserver:http://localhost:8888
+    #import: configserver:http://localhost:8888
 
+#  rabbitmq:
+#    host: localhost
+#    port: 5672
+#    username: guest
+#    password: guest

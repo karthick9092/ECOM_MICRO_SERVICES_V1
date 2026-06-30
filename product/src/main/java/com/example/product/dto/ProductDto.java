@@ -3,14 +3,17 @@ package com.example.product.dto;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import jakarta.persistence.EntityListeners;
 import jakarta.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EntityListeners(AuditingEntityListener.class)
 @Schema(description = "Product transfer object")
 public class ProductDto {
 
@@ -42,23 +45,5 @@ public class ProductDto {
 
 	@Schema(description = "Status", example = "ACTIVE")
 	private String status;
-
-	@NotBlank
-	@Size(max = 100)
-	@Schema(description = "Created by", example = "admin")
-	private String createdBy;
-
-	@Schema(description = "Creation timestamp", example = "2026-06-15T12:34:56", accessMode = Schema.AccessMode.READ_ONLY)
-	private LocalDateTime createdAt;
-
-	@Size(max = 100)
-	@Schema(description = "Last updated by", example = "editor", accessMode = Schema.AccessMode.READ_ONLY)
-	private String updatedBy;
-
-	@Schema(description = "Last update timestamp", accessMode = Schema.AccessMode.READ_ONLY)
-	private LocalDateTime updatedAt;
-
-	@Schema(description = "Optimistic lock version", accessMode = Schema.AccessMode.READ_ONLY)
-	private Long version;
 
 }

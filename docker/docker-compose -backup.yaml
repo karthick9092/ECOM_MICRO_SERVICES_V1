@@ -1,0 +1,76 @@
+services:
+
+  # RabbitMQ service:
+  rabbitmq-ms:
+    image: "rabbitmq:4-management"
+    container_name: "rabbitmq-ms"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_running"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - ecommerce-network
+
+  #Service 1 springboot user management service:
+  config-server-ms:
+    image: "logeswaranu/configserver:v1"
+    container_name: "config-server-ms"
+    ports:
+      - "8888:8888"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8888/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 90s
+    environment:
+      SPRING_RABBITMQ_HOST: "rabbitmq-ms"
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: "guest"
+      SPRING_RABBITMQ_PASSWORD: "guest"
+    depends_on:
+      rabbitmq-ms:
+        condition: service_started
+    cpus: '0.5'
+    mem_limit: 512M
+    networks:
+      - ecommerce-network
+
+  # Service 2 springboot user management service:
+  user-service-ms:
+    image: "logeswaranu/user:v1"
+    container_name: "user-service-ms"
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 90s
+    environment:
+      SPRING_PROFILES_ACTIVE: "prod"
+      SPRING_APPLICATION_NAME: "user"
+      SPRING_CONFIG_IMPORT: "configserver:http://config-server-ms:8888"
+      SPRING_RABBITMQ_HOST: "rabbitmq-ms"
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: "guest"
+      SPRING_RABBITMQ_PASSWORD: "guest"
+    depends_on:
+      config-server-ms:
+        condition: service_healthy
+      rabbitmq-ms:
+        condition: service_healthy
+    cpus: '0.5'
+    mem_limit: 512M
+    networks:
+      - ecommerce-network
+
+# Network for the services
+networks:
+  ecommerce-network:
+    driver: bridge

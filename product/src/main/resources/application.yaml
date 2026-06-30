@@ -19,6 +19,10 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.H2Dialect
+  config:
+    import: configserver:http://localhost:8888
 
 server:
   port: 8081
+
+

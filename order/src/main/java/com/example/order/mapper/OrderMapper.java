@@ -23,11 +23,6 @@ public final class OrderMapper {
                 .status(e.getStatus())
                 .shippingAddress(e.getShippingAddress())
                 .orderDate(e.getOrderDate())
-                .createdBy(e.getCreatedBy())
-                .createdAt(e.getCreatedAt())
-                .updatedBy(e.getUpdatedBy())
-                .updatedAt(e.getUpdatedAt())
-                .version(e.getVersion())
                 .build();
     }
 
@@ -43,9 +38,6 @@ public final class OrderMapper {
                 .totalPrice(d.getTotalPrice())
                 .status(d.getStatus() == null ? "PENDING" : d.getStatus())
                 .shippingAddress(d.getShippingAddress())
-                .createdBy(d.getCreatedBy())
-                .updatedBy(d.getUpdatedBy())
-                .version(d.getVersion())
                 .build();
     }
 
@@ -67,9 +59,6 @@ public final class OrderMapper {
         }
         if (dto.getShippingAddress() != null) {
             entity.setShippingAddress(dto.getShippingAddress());
-        }
-        if (dto.getUpdatedBy() != null) {
-            entity.setUpdatedBy(dto.getUpdatedBy());
         }
     }
 }
