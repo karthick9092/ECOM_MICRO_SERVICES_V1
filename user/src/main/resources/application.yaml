@@ -20,6 +20,22 @@ spring:
 #      ddl-auto: update
 #    show-sql: true
 
+  datasource:
+    url: jdbc:mysql://localhost:3306/ECOMDB?createDatabaseIfNotExist=true
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+  sql:
+    init:
+      mode: always
+    hibernate:
+
   #config:
     #import: "classpath:application_${spring.profiles.active}.yaml"
     #import: configserver:http://localhost:8888

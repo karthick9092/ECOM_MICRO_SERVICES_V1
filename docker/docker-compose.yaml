@@ -83,6 +83,8 @@ services:
         condition: service_healthy
       config-server-ms:
         condition: service_healthy
+      mysql-ms:
+        condition: service_healthy
     cpus: "0.5"
     mem_limit: 512M
     networks:
@@ -106,6 +108,8 @@ services:
         condition: service_healthy
       config-server-ms:
         condition: service_healthy
+      mysql-ms:
+        condition: service_healthy
     cpus: "0.5"
     mem_limit: 512M
     networks:
@@ -128,6 +132,8 @@ services:
       rabbitmq-ms:
         condition: service_healthy
       config-server-ms:
+        condition: service_healthy
+      mysql-ms:
         condition: service_healthy
     cpus: "0.5"
     mem_limit: 512M
