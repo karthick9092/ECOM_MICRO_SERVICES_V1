@@ -16,9 +16,7 @@ CREATE TABLE IF NOT EXISTS orders (
     version BIGINT DEFAULT 0
 );
 
-CREATE INDEX IF NOT EXISTS idx_order_number ON orders(order_number);
-CREATE INDEX IF NOT EXISTS idx_user_id ON orders(user_id);
-CREATE INDEX IF NOT EXISTS idx_product_id ON orders(product_id);
-CREATE INDEX IF NOT EXISTS idx_status ON orders(status);
-
+CREATE INDEX idx_user_id ON orders(user_id);
+CREATE INDEX idx_product_id ON orders(product_id);
+CREATE INDEX idx_status ON orders(status);
 
